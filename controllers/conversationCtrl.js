@@ -9,13 +9,11 @@ exports.createConversation = async (req, res) => {
     const userId = req.user._id;
     const receiverId = req.params.receiverId;
 
-    // Ensure senderId is always the authenticated user
     const data = {
       senderId: userId,
       receiverId: receiverId,
     };
 
-    // Check if a conversation already exists between these two users
     const checkConversation = await ConversationModel.findOne({
       $or: [
         { senderId: userId, receiverId: receiverId },
@@ -59,3 +57,4 @@ exports.getAllConversations = async (req, res) => {
     res.status(400).json({ status: false, message: error.message });
   }
 };
+
