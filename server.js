@@ -14,10 +14,9 @@ mongoose
 // Create HTTP server with the Express app
 const server = http.createServer(app);
 
-// Initialize Socket.io server and allow CORS
 const io = new Server(server, {
   cors: {
-    origin: "*", // Allow all origins for CORS
+    origin:"*",
   },
 });
 

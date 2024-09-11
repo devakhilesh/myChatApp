@@ -26,7 +26,7 @@ app.get("/",async(req,res)=>{
   }catch(err){
     console.log(err.message);
     res.status(500).json({status:false ,message:err.message})
-  }
+  } 
   })  
 app.get("/test", async (req, res)=>{
   try{
