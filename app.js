@@ -4,7 +4,7 @@ const fileUpload = require("express-fileupload");
 const cloudinary = require("cloudinary").v2;
 const cors = require("cors");
 const app = express();
-
+const path = require("path");
 app.use(express.json());
 
 app.use(fileUpload({
@@ -20,7 +20,14 @@ cloudinary.config({
   api_secret: process.env.API_SECRET,
 });
 
-
+app.get("/",async(req,res)=>{
+  try{
+  res.sendFile(path.join(__dirname, "./public/index.html"))
+  }catch(err){
+    console.log(err.message);
+    res.status(500).json({status:false ,message:err.message})
+  }
+  })  
 app.get("/test", async (req, res)=>{
   try{
 
