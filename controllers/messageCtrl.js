@@ -42,11 +42,11 @@ exports.getMessagesByConversationId = async (req, res) => {
   
       const messages = await messageModel.find({ conversationId }).populate('senderId', 'name email'); // Adjust populate fields as needed
   
-      if (messages.length === 0) {
-        return res
-          .status(404)
-          .json({ status: false, message: "No messages found for this conversation" });
-      }
+    //   if (messages.length === 0) {
+    //     return res
+    //       .status(404)
+    //       .json({ status: false, message: "No messages found for this conversation" });
+    //   }
   
       res.status(200).json({
         status: true,
