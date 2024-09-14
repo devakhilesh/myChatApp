@@ -40,7 +40,7 @@ exports.createConversation = async (req, res) => {
   }
 };
 
-exports.getAllConversations = async (req, res) => {
+/* exports.getAllConversations = async (req, res) => {
   try {
     const userId = req.user._id;
     const allConversations = await ConversationModel.find({
@@ -56,5 +56,34 @@ exports.getAllConversations = async (req, res) => {
   } catch (error) {
     res.status(400).json({ status: false, message: error.message });
   }
-};
+}; */
 
+exports.getAllConversations = async (req, res) => {
+  try {
+    const userId = req.user._id;
+
+    // Fetch all conversations where the logged-in user is either the sender or the receiver
+    const allConversations = await ConversationModel.find({
+      $or: [{ senderId: userId }, { receiverId: userId }],
+    }).populate('senderId receiverId');
+
+    // Modify the response for each conversation
+    const modifiedConversations = allConversations.map((conversation) => {
+      const isSender = conversation.senderId._id.toString() === userId.toString();
+
+      return {
+        ...conversation.toObject(), 
+        isSender, 
+        partner: isSender ? conversation.receiverId : conversation.senderId, 
+      };
+    });
+
+    res.status(200).json({
+      status: true,
+      message: "All conversations returned",
+      data: modifiedConversations,
+    });
+  } catch (error) {
+    res.status(400).json({ status: false, message: error.message });
+  }
+};

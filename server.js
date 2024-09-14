@@ -36,7 +36,7 @@ io.on("connection", (socket) => {
 });
 
 app.use((req, res, next) => {
-  req.io = io; // Attach io instance to request object
+  req.io = io; 
   next();
 });
 
