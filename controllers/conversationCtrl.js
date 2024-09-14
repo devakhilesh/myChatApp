@@ -62,28 +62,35 @@ exports.getAllConversations = async (req, res) => {
   try {
     const userId = req.user._id;
 
-    // Fetch all conversations where the logged-in user is either the sender or the receiver
     const allConversations = await ConversationModel.find({
       $or: [{ senderId: userId }, { receiverId: userId }],
     }).populate('senderId receiverId');
 
-    // Modify the response for each conversation
     const modifiedConversations = allConversations.map((conversation) => {
-      const isSender = conversation.senderId._id.toString() === userId.toString();
+      let senderId, receiverId;
+
+      if (conversation.senderId._id.toString() === userId.toString()) {
+        senderId = conversation.senderId;
+        receiverId = conversation.receiverId;
+      } else {
+        senderId = conversation.receiverId;
+        receiverId = conversation.senderId;
+      }
 
       return {
         ...conversation.toObject(), 
-        isSender, 
-        partner: isSender ? conversation.receiverId : conversation.senderId, 
+        senderId, 
+        receiverId, 
       };
     });
 
     res.status(200).json({
       status: true,
-      message: "All conversations returned",
+      message: "All conversations returned uuuuuuuuuuuuuuuuuuuuu",
       data: modifiedConversations,
     });
   } catch (error) {
     res.status(400).json({ status: false, message: error.message });
   }
 };
+
