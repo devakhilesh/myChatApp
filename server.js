@@ -16,29 +16,37 @@ const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
     origin: "*", 
-    methods: ["GET", "POST"], 
   },
 });
 
 io.on("connection", (socket) => {
   console.log(`User connected: ${socket.id}`);
 
-  socket.on("chat message", (data) => {
-    console.log("Message received:", data);
-
-    io.emit("chat message", data);
+  // Join conversation room based on conversationId
+  socket.on("join room", (conversationId) => {
+    socket.join(conversationId);
+    console.log(`User joined room: ${conversationId}`);
   });
 
-  // Handle disconnection
+  // Handle sending messages
+  socket.on("chat message", (data) => {
+    const { conversationId, message, senderId } = data;
+    console.log("Message received:", data);
+
+    // Emit message to all users in the conversation room
+    io.to(conversationId).emit("chat message", data);
+  });
+
   socket.on("disconnect", () => {
     console.log(`User disconnected: ${socket.id}`);
   });
 });
 
 app.use((req, res, next) => {
-  req.io = io; 
+  req.io = io;
   next();
 });
+
 
 const port = process.env.PORT || 3001;
 server.listen(port, () => {
