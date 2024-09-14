@@ -1,6 +1,6 @@
 const messageModel = require("../models/Messages")
 
-
+let messages = []
 exports.createMessage = async (req,res)=>{
     try{
 const userId = req.user._id
@@ -22,8 +22,9 @@ if(!message || message === ""){
 const saveMessage = await messageModel.create(data)
 // Emit the message to the specific conversation room using socket.io
 console.log(req.io)
+messages.push({ message, conversationId });
 if (req.io) {
-    req.io.to(conversationId).emit("new message", saveMessage);
+    req.io.emit("new message", messages);
   }
 res.status(201).json({status:true, message:"message send successfully", data:saveMessage})
 
