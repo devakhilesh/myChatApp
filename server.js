@@ -43,12 +43,17 @@ io.on("connection", (socket) => {
 socket.on("typing", (conversationId) => {
   // Emit typing event to other users in the same room
   socket.to(conversationId).emit("typing", { userId: socket.id });
+
+console.log(socket.to(conversationId).emit("typing", { userId: socket.id }))
+
+
 });
 // modified
 // Handle stop typing event
 socket.on("stop typing", (conversationId) => {
   // Emit stop typing event to other users in the same room
   socket.to(conversationId).emit("stop typing", { userId: socket.id });
+  console.log(socket.to(conversationId).emit("stop typing", { userId: socket.id }))
 });
 
 ///above
