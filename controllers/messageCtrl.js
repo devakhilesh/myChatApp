@@ -26,7 +26,7 @@ exports.createMessage = async (req, res) => {
     // Emit the message to the specific conversation room using socket.io
     if (req.io) {
       req.io.to(conversationId).emit("new message", saveMessage); 
-      console.log( req.io.to(conversationId).emit("new message", saveMessage))
+    //   console.log( req.io.to(conversationId).emit("new message", saveMessage))
     }
     res
       .status(201)

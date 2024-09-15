@@ -25,7 +25,7 @@ io.on("connection", (socket) => {
   // Join conversation room based on conversationId
   socket.on("join room", (conversationId) => {
     socket.join(conversationId);
-    console.log(`User joined room: ${conversationId}`);
+    // console.log(`User joined room: ${conversationId}`);
   });
 
   // Handle sending messages
@@ -37,6 +37,21 @@ io.on("connection", (socket) => {
     io.to(conversationId).emit("chat message", data);
   });
 
+
+
+// Handle typing event
+socket.on("typing", (conversationId) => {
+  // Emit typing event to other users in the same room
+  socket.to(conversationId).emit("typing", { userId: socket.id });
+});
+// modified
+// Handle stop typing event
+socket.on("stop typing", (conversationId) => {
+  // Emit stop typing event to other users in the same room
+  socket.to(conversationId).emit("stop typing", { userId: socket.id });
+});
+
+///above
   socket.on("disconnect", () => {
     console.log(`User disconnected: ${socket.id}`);
   });
