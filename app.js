@@ -38,8 +38,11 @@ app.get("/test", async (req, res)=>{
   }
 })
 
-const userRoute = require("./routing/userRouting")
+
+const userRoute = require("./routing/userRouting");
+const goldSilver = require("./routes/gold");
 app.use("/", userRoute)
+app.use("/", goldSilver)
 
 module.exports = app;
  
