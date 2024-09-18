@@ -6,9 +6,9 @@ const router = express.Router()
 router.route('/sendRequest/:receiverId').post(authentication ,sendRequest)
 router.route('/allRequest').get(authentication ,getAllRequests)
 router.route('/acceptRequest/:requestId').put(authentication ,acceptRequest)
-router.route('/rejectRequest/:requestId').post(authentication ,rejectRequest)
-router.route('/blocked/:requestId').post(authentication ,blockRequest)
-router.route('/unblock/:requestId').post(authentication ,unblockRequest)
+router.route('/rejectRequest/:requestId').put(authentication ,rejectRequest)
+router.route('/blocked/:requestId').put(authentication ,blockRequest)
+router.route('/unblock/:requestId').put(authentication ,unblockRequest)
 
 module.exports = router
 
