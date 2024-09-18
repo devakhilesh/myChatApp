@@ -10,8 +10,3 @@ router.route("/getAllCoversation").get(authentication,getAllConversations)
 module.exports = router
 
 
-/* 
-A
-B
-C
-*/
