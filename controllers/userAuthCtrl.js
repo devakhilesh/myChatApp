@@ -1,4 +1,7 @@
 const UserModel = require("../models/userAuthModel");
+const ConversationModel = require("../models/conversationModel");
+const RequestModel = require("../models/requestModel");
+
 const cloudinary = require("cloudinary").v2;
 const jwt = require("jsonwebtoken");
 
@@ -145,7 +148,7 @@ exports.getProfile = async (req, res) => {
   }
 };
 
-exports.getAllUsers = async (req, res) => {
+/* exports.getAllUsers = async (req, res) => {
   try {
     const userId = req.user._id;
     const allUsers = await UserModel.find({ _id: { $ne: userId } });
@@ -155,6 +158,43 @@ exports.getAllUsers = async (req, res) => {
   } catch (err) {
     res.status(500).json({ status: false, message: err.message });
   }
+}; */
+
+
+exports.getAllUsers = async (req, res) => {
+  try {
+    const userId = req.user._id;
+
+    const allUsers = await UserModel.find({ _id: { $ne: userId } }, 'name email _id'); 
+
+    const friendRequests = await RequestModel.find({
+      $or: [
+        { senderId: userId },
+        { receiverId: userId }
+      ]
+    });
+
+    const userRelationships = {};
+
+    friendRequests.forEach(req => {
+      const otherUserId = req.senderId.toString() === userId.toString() ? req.receiverId.toString() : req.senderId.toString();
+      userRelationships[otherUserId] = req.status;
+    });
+
+    const usersWithStatus = allUsers.map(user => {
+      const relationshipStatus = userRelationships[user._id.toString()] || 'none'; 
+      return {
+        ...user._doc, 
+        relationshipStatus
+      };
+    });
+
+    return res.status(200).json({
+      status: true,
+      message: "All users",
+      data: usersWithStatus
+    });
+  } catch (err) {
+    return res.status(500).json({ status: false, message: err.message });
+  }
 };
-
-
